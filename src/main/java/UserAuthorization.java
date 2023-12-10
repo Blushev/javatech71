@@ -1,7 +1,7 @@
 import javax.persistence.*;
 
 @Entity
-@Table(name = "userauthorization")
+@Table(name = "user_authorization")
 public class UserAuthorization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,24 +5,31 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    private Long id;
 
-    @Column(name = "username")
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password")
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "email")
+    @Column(nullable = false, unique = true)
     private String email;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -39,13 +46,5 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 }

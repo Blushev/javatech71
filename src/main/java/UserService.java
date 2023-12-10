@@ -4,6 +4,7 @@ import org.hibernate.Transaction;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.List;
 
 public class UserService {
     public boolean registerUser(String username, String password, String email) {
@@ -11,11 +12,17 @@ public class UserService {
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
 
-            UserRegistration user = new UserRegistration(username, password, email);
-            session.save(user); // Сохраните данные регистрации пользователя
+            UserRegistration userRegistration = new UserRegistration(username, password, email);
+            session.save(userRegistration); // Сохраните данные регистрации пользователя
+
+            UserAuthorization userAuthorization = new UserAuthorization();
+            userAuthorization.setUsername(username);
+            userAuthorization.setPassword(password);
+            session.save(userAuthorization);
 
             tx.commit();
             return true;
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -29,8 +36,14 @@ public class UserService {
                     .setParameter("username", username)
                     .setParameter("password", password);
 
-            UserAuthorization user = (UserAuthorization) query.getSingleResult();
-            return user;
+
+            List<UserAuthorization> users = query.getResultList();
+            System.out.println("Query: " + query.unwrap(org.hibernate.query.Query.class).getQueryString());
+            System.out.println("Users found: " + users);
+
+            return users.isEmpty() ? null : users.get(0);
+        } catch (NoResultException e) {
+            return null;
         }
     }
 }
